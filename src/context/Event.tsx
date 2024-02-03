@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from "react";
 import { UnionOmit } from "../utils/types";
 import { EVENT_COLOR } from "./useEvent";
 
-type Event = {
+export type Event = {
   id: string;
   name: string;
   color: (typeof EVENT_COLOR)[number];
