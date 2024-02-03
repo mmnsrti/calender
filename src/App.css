@@ -3,14 +3,21 @@
 *::after {
   box-sizing: border-box;
   font-family: sans-serif;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
 }
 
 :root {
   --blue-background: hsl(200, 80%, 50%);
   --red-background: hsl(0, 75%, 60%);
   --green-background: hsl(150, 80%, 30%);
+<<<<<<< HEAD
   --border-color: #d3d4d6;
+=======
+  --border-color: #dadce0;
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
   --border-size: 1px;
   --day-padding: 0.25rem;
 }
@@ -21,6 +28,7 @@ body {
 
 #root {
   height: 100vh;
+<<<<<<< HEAD
   margin: 0 auto;
   display: grid;
 }
@@ -98,10 +106,17 @@ body {
 }
 
 
+=======
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
 .calendar {
   height: 100%;
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
   color: #494949
 }
 
@@ -117,6 +132,23 @@ body {
 }
 
 .header> :last-child {
+=======
+  color: #333;
+}
+
+.header {
+  padding: 1rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.header > * {
+  margin-right: 0.5rem;
+}
+
+.header > :last-child {
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
   margin-right: 0;
 }
 
@@ -189,6 +221,7 @@ body {
   color: #333;
 }
 
+<<<<<<< HEAD
 .dark-mode .month-change-btn {
   color: #fcfcfc;
 
@@ -199,6 +232,12 @@ body {
 }
 
 
+=======
+.month-change-btn:hover {
+  background-color: #f1f3f4;
+}
+
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
 .month-change-btn:first-child {
   margin-right: -0.5rem;
 }
@@ -214,7 +253,11 @@ body {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   grid-auto-rows: minmax(100px, 1fr);
+<<<<<<< HEAD
   background-color: #e3e3e3;
+=======
+  background-color: var(--border-color);
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
   gap: var(--border-size);
   padding: var(--border-size);
 }
@@ -225,6 +268,7 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
   min-height: 150px;
   border-radius: 6px;
   /* Darker current time indicator */
@@ -236,14 +280,26 @@ body {
 
 .non-month-day {
   opacity: 0.6;
+=======
+}
+
+.non-month-day {
+  opacity: 0.75;
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
 }
 
 .old-month-day .events,
 .old-month-day .day-header {
+<<<<<<< HEAD
   opacity: 0.45;
 }
 
 
+=======
+  opacity: 0.5;
+}
+
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
 .day-header {
   margin-bottom: 0.25rem;
   display: flex;
@@ -256,7 +312,11 @@ body {
   text-transform: uppercase;
   font-size: 0.75rem;
   font-weight: bold;
+<<<<<<< HEAD
   color: #131c9e;
+=======
+  color: #777;
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
 }
 
 .day-number {
@@ -268,6 +328,7 @@ body {
   align-items: center;
 }
 
+<<<<<<< HEAD
 :root {
   --current-time-height: 0;
   /* Default height */
@@ -290,6 +351,12 @@ body {
 
   border-radius: 50%;
   color: rgb(0, 0, 0);
+=======
+.day-number.today {
+  background-color: var(--blue-background);
+  border-radius: 50%;
+  color: white;
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
 }
 
 .day:hover .add-event-btn,
@@ -319,11 +386,14 @@ body {
   background-color: #f1f3f4;
 }
 
+<<<<<<< HEAD
 .dark-mode .add-event-btn {
   color: #fcfcfc;
 
 }
 
+=======
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
 .event {
   display: flex;
   align-items: center;
@@ -336,7 +406,10 @@ body {
   border: none;
   font-size: 1rem;
   padding: 0;
+<<<<<<< HEAD
   background-color: transparent;
+=======
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
 }
 
 .all-day-event {
@@ -349,11 +422,19 @@ body {
   overflow: hidden;
 }
 
+<<<<<<< HEAD
 .event>* {
   margin-right: 0.5rem;
 }
 
 .event> :last-child {
+=======
+.event > * {
+  margin-right: 0.5rem;
+}
+
+.event > :last-child {
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
   margin-right: 0;
 }
 
@@ -407,13 +488,19 @@ body {
   bottom: 0;
   right: 0;
   display: flex;
+<<<<<<< HEAD
   z-index: 50;
 
+=======
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
   justify-content: center;
   align-items: center;
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
 .modal .overlay {
   background-color: transparent;
   width: 100%;
@@ -436,17 +523,24 @@ body {
   background-color: white;
   border-radius: 0.5rem;
   padding: 1rem;
+<<<<<<< HEAD
+=======
+  z-index: 1;
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
   min-width: 300px;
   max-width: 95%;
   animation: pop-in 250ms forwards;
   scale: 0;
 }
 
+<<<<<<< HEAD
 .dark-mode .modal-body {
   background-color: rgb(0, 0, 0);
 
 }
 
+=======
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
 .modal.closing .modal-body {
   animation: pop-in 250ms forwards reverse;
 }
@@ -465,6 +559,7 @@ body {
   align-items: center;
 }
 
+<<<<<<< HEAD
 .modal-title>* {
   margin-right: 0.25rem;
 }
@@ -474,6 +569,17 @@ body {
 }
 
 .modal-title>small {
+=======
+.modal-title > * {
+  margin-right: 0.25rem;
+}
+
+.modal-title > :last-child {
+  margin-right: 0;
+}
+
+.modal-title > small {
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
   color: #555;
 }
 
@@ -516,17 +622,29 @@ body {
   display: flex;
 }
 
+<<<<<<< HEAD
 .row>* {
+=======
+.row > * {
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
   flex-grow: 1;
   flex-basis: 0;
   margin-right: 0.5rem;
 }
 
+<<<<<<< HEAD
 .row> :last-child {
   margin-right: 0;
 }
 
 .row.left>* {
+=======
+.row > :last-child {
+  margin-right: 0;
+}
+
+.row.left > * {
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
   flex-grow: 0;
 }
 
@@ -543,7 +661,11 @@ body {
   left: -9999px;
 }
 
+<<<<<<< HEAD
 .color-radio+label::before {
+=======
+.color-radio + label::before {
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
   content: "";
   display: block;
   width: 1.75rem;
@@ -553,6 +675,7 @@ body {
   opacity: 0.25;
 }
 
+<<<<<<< HEAD
 .color-radio:checked+label::before {
   opacity: 1;
 }
@@ -570,5 +693,24 @@ body {
 }
 
 .color-radio[value="green"]+label::before {
+=======
+.color-radio:checked + label::before {
+  opacity: 1;
+}
+
+.color-radio:focus + label::before {
+  outline: 1px solid black;
+}
+
+.color-radio[value="blue"] + label::before {
+  background-color: var(--blue-background);
+}
+
+.color-radio[value="red"] + label::before {
+  background-color: var(--red-background);
+}
+
+.color-radio[value="green"] + label::before {
+>>>>>>> 3d9964b (added datefns function  and changed some styles)
   background-color: var(--green-background);
 }
