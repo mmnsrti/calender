@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   startOfWeek,
   startOfMonth,
@@ -13,6 +13,7 @@ import {
 } from "date-fns";
 import { formatDate } from "../utils/formatDate";
 import { cc } from "../utils/cc";
+import { useEvent } from "../context/useEvent";
 const Calender = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const calenderDays = useMemo(() => {
@@ -29,12 +30,26 @@ const Calender = () => {
     <div>
       <div className="calendar">
         <div className="header">
-          <button className="btn" onClick={()=>setSelectedMonth(new Date)}>Today</button>
+          <button className="btn" onClick={() => setSelectedMonth(new Date())}>
+            Today
+          </button>
           <div>
-            <button className="month-change-btn" onClick={()=>setSelectedMonth(m=>subMonths(m,1))}>&lt;</button>
-            <button className="month-change-btn" onClick={()=>setSelectedMonth(m=>addMonths(m,1))}>&gt;</button>
+            <button
+              className="month-change-btn"
+              onClick={() => setSelectedMonth((m) => subMonths(m, 1))}
+            >
+              &lt;
+            </button>
+            <button
+              className="month-change-btn"
+              onClick={() => setSelectedMonth((m) => addMonths(m, 1))}
+            >
+              &gt;
+            </button>
           </div>
-          <span className="month-title">{formatDate(selectedMonth,{month:'long',year:'numeric'})} </span>
+          <span className="month-title">
+            {formatDate(selectedMonth, { month: "long", year: "numeric" })}{" "}
+          </span>
         </div>
         <div className="days">
           {calenderDays.map((day, index) => (
@@ -58,6 +73,7 @@ type CalenderDayProps = {
 };
 
 function CalenderDay({ day, showWeekName, selectedMonth }: CalenderDayProps) {
+  const { addEvent } = useEvent();
   return (
     <div
       className={cc(
@@ -94,6 +110,10 @@ function CalenderDay({ day, showWeekName, selectedMonth }: CalenderDayProps) {
           </div> */}
     </div>
   );
+}
+function EventFormModal({ onDelete,event, date, onSubmit }: any) {
+
+
 }
 
 export default Calender;
