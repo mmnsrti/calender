@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useId, Fragment } from "react";
 import {
   startOfWeek,
   startOfMonth,
@@ -13,7 +13,10 @@ import {
 } from "date-fns";
 import { formatDate } from "../utils/formatDate";
 import { cc } from "../utils/cc";
-import { useEvent } from "../context/useEvent";
+import { EVENT_COLOR, useEvent } from "../context/useEvent";
+import Modal, { ModalProps } from "./Modal";
+import { UnionOmit } from "../utils/types";
+import { Event } from "../context/Event";
 const Calender = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const calenderDays = useMemo(() => {
@@ -74,6 +77,7 @@ type CalenderDayProps = {
 
 function CalenderDay({ day, showWeekName, selectedMonth }: CalenderDayProps) {
   const { addEvent } = useEvent();
+  const [isNewEventModalOpen, setIsNewEventModalOpen] = useState(false);
   return (
     <div
       className={cc(
@@ -91,7 +95,12 @@ function CalenderDay({ day, showWeekName, selectedMonth }: CalenderDayProps) {
         <div className={cc("day-number", isToday(day) && "today")}>
           {formatDate(day, { day: "numeric" })}
         </div>
-        <button className="add-event-btn">+</button>
+        <button
+          className="add-event-btn"
+          onClick={() => setIsNewEventModalOpen(!isNewEventModalOpen)}
+        >
+          +
+        </button>
       </div>
       {/* <div className="events">
             <button className="all-day-event blue event">
@@ -108,12 +117,105 @@ function CalenderDay({ day, showWeekName, selectedMonth }: CalenderDayProps) {
               <div className="event-name">Event Name</div>
             </button>
           </div> */}
+      <EventFormModal
+        date={day}
+        isOpen={isNewEventModalOpen}
+        onClose={() => setIsNewEventModalOpen(false)}
+        onSubmit={addEvent}
+      />
     </div>
   );
 }
-function EventFormModal({ onDelete,event, date, onSubmit }: any) {
 
+type EventFormModalProps = {
+  onSubmit: (event: UnionOmit<Event, "id">) => void;
+} & (
+  | {
+      onDelete: () => void;
+      event: Event;
+      date?: never;
+    }
+  | {
+      onDelete?: never;
+      event?: never;
+      date?: Date;
+    }
+) &
+  Omit<ModalProps, "children">;
 
+function EventFormModal({
+  onDelete,
+  event,
+  date,
+  onSubmit,
+  ...modalProps
+}: EventFormModalProps) {
+  const isNew = event == null;
+  const formId = useId();
+  const [selectedColor,setSelectedColor]=useState(event?.color||EVENT_COLOR[0])
+  return (
+    <Modal {...modalProps}>
+      <div className="modal-title">
+        <div>{isNew ? "Add" : "Edit "} Event</div>
+        <small>{formatDate(date || event.date, { dateStyle: "long" })}</small>
+        <button className="close-btn" onClick={modalProps.onClose}>
+          &times;
+        </button>
+      </div>
+      <form>
+        <div className="form-group">
+          <label htmlFor={`${formId}-name`}>Name</label>
+          <input type="text" name="name" id={`${formId}-name`} />
+        </div>
+        <div className="form-group checkbox">
+          <input type="checkbox" name="all-day" id={`${formId}-all-day`} />
+          <label htmlFor={`${formId}-all-day`}>All Day?</label>
+        </div>
+        <div className="row">
+          <div className="form-group">
+            <label htmlFor={`${formId}-start-time`}>Start Time</label>
+            <input type="time" name="start-time" id={`${formId}-start-time`} />
+          </div>
+          <div className="form-group">
+            <label htmlFor={`${formId}-end-time`}>End Time</label>
+            <input type="time" name="end-time" id={`${formId}-end-time`} />
+          </div>
+        </div>
+        <div className="form-group">
+          <label>Color</label>
+          <div className="row left">
+            {EVENT_COLOR.map((c) => (
+              <Fragment key={c}>
+                <input
+                  type="radio"
+                  name="color"
+                  value={c}
+                  id={`${formId}-${c}`}
+
+                  checked={selectedColor===c}
+                  onChange={()=>setSelectedColor(c)}
+                  className="color-radio"
+                />
+                <label htmlFor={`${formId}-${c}`}>
+                  <span className="sr-only">{c}</span>
+                </label>
+              </Fragment>
+            ))}
+          </div>
+        </div>
+        <div className="row">
+          <button className="btn btn-success" type="submit">
+            {isNew ? "Add" : "Edit"}
+          </button>
+          {onDelete != null && (
+            <button onClick={onDelete} className="btn btn-delete" type="button">
+              Delete
+            </button>
+          )}
+        </div>
+      </form>
+    </Modal>
+  );
 }
 
 export default Calender;
