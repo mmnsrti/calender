@@ -13,18 +13,38 @@ export type Event = {
 );
 type EventsContext = {
   events: Event[];
-  addEvent:(event : UnionOmit<Event ,'id'>)=>void
+  addEvent: (event: UnionOmit<Event, "id">) => void;
+  updateEvent : (id :string , event: UnionOmit<Event,'id'>) =>void
+  deleteEvent : (id :string) =>void
 };
 
 export const Context = createContext<EventsContext | null>(null);
 
-type EventProviderProps={
-    children: React.ReactNode;
+type EventProviderProps = {
+  children: React.ReactNode;
+};
+export function EventProvider({ children }: EventProviderProps) {
+  const [events, setEvents] = useState<Event[]>([]);
+  function addEvent(event: UnionOmit<Event, "id">) {
+    setEvents((e) => [...e, { ...event, id: crypto.randomUUID() }]);
+  }
+  function updateEvent(id: string, eventDetails: UnionOmit<Event, "id">) {
+    setEvents(e => {
+      return e.map(event => {
+        return event.id === id ? { id, ...eventDetails } : event
+      })
+    })
+  }
+  function deleteEvent(id: string) {
+    setEvents(events.filter(event => event.id !== id));
+  }
+
+  return (
+    <Context.Provider value={{ events, addEvent, updateEvent, deleteEvent }}>
+      {children}
+    </Context.Provider>
+  );
 }
-export function EventProvider ({ children }: EventProviderProps) {
-    const [events, setEvents] = useState<Event[]>([])
-    function addEvent (event:UnionOmit<Event,'id'>){
-        setEvents(e=>[...e,{...event,id:crypto.randomUUID()}])
-    }
-    return <Context.Provider value={{events,addEvent}}>{children}</Context.Provider>
-}
+
+
+function

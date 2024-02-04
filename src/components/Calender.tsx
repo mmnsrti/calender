@@ -1,4 +1,12 @@
-import React, { useState, useMemo, useEffect, useId, Fragment } from "react";
+import React, {
+  useState,
+  useMemo,
+  useRef,
+  useEffect,
+  useId,
+  Fragment,
+  FormEvent,
+} from "react";
 import {
   startOfWeek,
   startOfMonth,
@@ -10,6 +18,8 @@ import {
   isToday,
   subMonths,
   addMonths,
+  isSameDay,
+  parse,
 } from "date-fns";
 import { formatDate } from "../utils/formatDate";
 import { cc } from "../utils/cc";
@@ -17,6 +27,7 @@ import { EVENT_COLOR, useEvent } from "../context/useEvent";
 import Modal, { ModalProps } from "./Modal";
 import { UnionOmit } from "../utils/types";
 import { Event } from "../context/Event";
+import { tr } from "date-fns/locale";
 const Calender = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const calenderDays = useMemo(() => {
@@ -28,6 +39,7 @@ const Calender = () => {
       end: lastWeekEnd,
     });
   }, [selectedMonth]);
+  const { events } = useEvent();
 
   return (
     <div>
@@ -61,6 +73,7 @@ const Calender = () => {
               day={day}
               showWeekName={index < 7}
               selectedMonth={selectedMonth}
+              events={events.filter((e) => isSameDay(day, e.date))}
             />
           ))}
         </div>
@@ -73,11 +86,32 @@ type CalenderDayProps = {
   day: Date;
   showWeekName: boolean;
   selectedMonth: Date;
+  events: Event[];
 };
 
-function CalenderDay({ day, showWeekName, selectedMonth }: CalenderDayProps) {
+function CalenderDay({
+  day,
+  showWeekName,
+  selectedMonth,
+  events,
+}: CalenderDayProps) {
   const { addEvent } = useEvent();
   const [isNewEventModalOpen, setIsNewEventModalOpen] = useState(false);
+  const sortedEvents = useMemo(() => {
+    const timeToNumber = (time: string) => parseFloat(time.replace(":", "."));
+
+    return [...events].sort((a, b) => {
+      if (a.allDay && b.allDay) {
+        return 0;
+      } else if (a.allDay) {
+        return -1;
+      } else if (b.allDay) {
+        return 1;
+      } else {
+        return timeToNumber(a.startTime) - timeToNumber(b.startTime);
+      }
+    });
+  }, [events]);
   return (
     <div
       className={cc(
@@ -102,21 +136,18 @@ function CalenderDay({ day, showWeekName, selectedMonth }: CalenderDayProps) {
           +
         </button>
       </div>
-      {/* <div className="events">
-            <button className="all-day-event blue event">
-              <div className="event-name">Short</div>
-            </button>
-            <button className="all-day-event green event">
-              <div className="event-name">
-                Long Event Name That Just Keeps Going
-              </div>
-            </button>
-            <button className="event">
-              <div className="color-dot blue"></div>
-              <div className="event-time">7am</div>
-              <div className="event-name">Event Name</div>
-            </button>
-          </div> */}
+      {events.length > 0 && (
+        <div className="events">
+          {sortedEvents.map((event, index) => (
+            <Fragment key={event.id}>
+              <CalenderEvent event={event} />
+              {index < sortedEvents.length - 1 && (
+                <div className="event-separator"></div>
+              )}
+            </Fragment>
+          ))}
+        </div>
+      )}
       <EventFormModal
         date={day}
         isOpen={isNewEventModalOpen}
@@ -127,6 +158,39 @@ function CalenderDay({ day, showWeekName, selectedMonth }: CalenderDayProps) {
   );
 }
 
+function CalenderEvent({ event }: { event: Event }) {
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const { updateEvent, deleteEvent } = useEvent();
+  return (
+    <>
+      <button
+        className={cc("event", event.color, event.allDay && "all-day-event ")}
+        onClick={()=>setIsEditOpen(true)}
+      >
+        {event.allDay ? (
+          <div className="event-name">{event.name}</div>
+        ) : (
+          <>
+            <div className={`color-dot blue ${event.color}`}></div>
+            <div className="event-time">
+              {formatDate(parse(event.startTime, "HH:mm", event.date), {
+                timeStyle: "short",
+              })}
+            </div>
+            <div className="event-name">{event.name}</div>
+          </>
+        )}
+      </button>
+      <EventFormModal
+        event={event}
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        onSubmit={(e) => updateEvent(event.id, e)}
+        onDelete={() => deleteEvent(event.id)}
+      />
+    </>
+  );
+}
 type EventFormModalProps = {
   onSubmit: (event: UnionOmit<Event, "id">) => void;
 } & (
@@ -152,7 +216,54 @@ function EventFormModal({
 }: EventFormModalProps) {
   const isNew = event == null;
   const formId = useId();
-  const [selectedColor,setSelectedColor]=useState(event?.color||EVENT_COLOR[0])
+  const endTimeRef = useRef<HTMLInputElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+
+  const [selectedColor, setSelectedColor] = useState(
+    event?.color || EVENT_COLOR[0]
+  );
+  const [isAllDayChecked, setIsAllDayChecked] = useState(
+    event?.allDay || false
+  );
+  const [startTime, setStartTime] = useState(event?.startTime || "");
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const name = nameRef.current?.value;
+    const endTime = endTimeRef.current?.value;
+    if (name == null || name === "") return;
+    const commonProps = {
+      name,
+      date: date || event?.date,
+      color: selectedColor,
+    };
+    let newEvent: UnionOmit<Event, "id">;
+
+    if (isAllDayChecked) {
+      newEvent = {
+        ...commonProps,
+        allDay: true,
+      };
+    } else {
+      if (
+        startTime == null ||
+        startTime === "" ||
+        endTime == null ||
+        endTime === ""
+      ) {
+        return;
+      }
+      newEvent = {
+        ...commonProps,
+        allDay: false,
+
+        startTime,
+        endTime,
+      };
+    }
+    modalProps.onClose();
+    onSubmit(newEvent);
+  };
+
   return (
     <Modal {...modalProps}>
       <div className="modal-title">
@@ -162,23 +273,54 @@ function EventFormModal({
           &times;
         </button>
       </div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor={`${formId}-name`}>Name</label>
-          <input type="text" name="name" id={`${formId}-name`} />
+          <input
+            defaultValue={event?.name}
+            required
+            type="text"
+            name="name"
+            ref={nameRef}
+            id={`${formId}-name`}
+          />
         </div>
         <div className="form-group checkbox">
-          <input type="checkbox" name="all-day" id={`${formId}-all-day`} />
+          <input
+            checked={isAllDayChecked}
+            onChange={(e) => setIsAllDayChecked(e.target.checked)}
+            type="checkbox"
+            name="all-day"
+            id={`${formId}-all-day`}
+          />
           <label htmlFor={`${formId}-all-day`}>All Day?</label>
         </div>
         <div className="row">
           <div className="form-group">
             <label htmlFor={`${formId}-start-time`}>Start Time</label>
-            <input type="time" name="start-time" id={`${formId}-start-time`} />
+            <input
+              required={!isAllDayChecked}
+              disabled={isAllDayChecked}
+              type="time"
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+              name="start-time"
+              id={`${formId}-start-time`}
+            />
           </div>
           <div className="form-group">
             <label htmlFor={`${formId}-end-time`}>End Time</label>
-            <input type="time" name="end-time" id={`${formId}-end-time`} />
+            <input
+              ref={endTimeRef}
+              defaultValue={event?.endTime}
+
+              required={!isAllDayChecked}
+              min={startTime}
+              disabled={isAllDayChecked}
+              type="time"
+              name="end-time"
+              id={`${formId}-end-time`}
+            />
           </div>
         </div>
         <div className="form-group">
@@ -191,9 +333,8 @@ function EventFormModal({
                   name="color"
                   value={c}
                   id={`${formId}-${c}`}
-
-                  checked={selectedColor===c}
-                  onChange={()=>setSelectedColor(c)}
+                  checked={selectedColor === c}
+                  onChange={() => setSelectedColor(c)}
                   className="color-radio"
                 />
                 <label htmlFor={`${formId}-${c}`}>
