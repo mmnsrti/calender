@@ -1,8 +1,7 @@
-import React, {
+import  {
   useState,
   useMemo,
   useRef,
-  useEffect,
   useId,
   Fragment,
   FormEvent,
@@ -27,7 +26,6 @@ import { EVENT_COLOR, useEvent } from "../context/useEvent";
 import Modal, { ModalProps } from "./Modal";
 import { UnionOmit } from "../utils/types";
 import { Event } from "../context/Event";
-import { tr } from "date-fns/locale";
 import OverflowContainer from "./OverflowContainer";
 const Calender = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
@@ -238,16 +236,8 @@ function CalenderEvent({ event }: { event: Event }) {
 type EventFormModalProps = {
   onSubmit: (event: UnionOmit<Event, "id">) => void;
 } & (
-  | {
-      onDelete: () => void;
-      event: Event;
-      date?: never;
-    }
-  | {
-      onDelete?: never;
-      event?: never;
-      date?: Date;
-    }
+  | { onDelete: () => void; event: Event;date?: never}
+  | { onDelete?: never; event?: never;date: Date}
 ) &
   Omit<ModalProps, "children">;
 
@@ -270,23 +260,26 @@ function EventFormModal({
     event?.allDay || false
   );
   const [startTime, setStartTime] = useState(event?.startTime || "");
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    const name = nameRef.current?.value;
-    const endTime = endTimeRef.current?.value;
-    if (name == null || name === "") return;
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+
+    const name = nameRef.current?.value
+    const endTime = endTimeRef.current?.value
+
+    if (name == null || name === "") return
+
     const commonProps = {
       name,
       date: date || event?.date,
       color: selectedColor,
-    };
-    let newEvent: UnionOmit<Event, "id">;
+    }
+    let newEvent: UnionOmit<Event, "id">
 
     if (isAllDayChecked) {
       newEvent = {
         ...commonProps,
         allDay: true,
-      };
+      }
     } else {
       if (
         startTime == null ||
@@ -294,20 +287,19 @@ function EventFormModal({
         endTime == null ||
         endTime === ""
       ) {
-        return;
+        return
       }
       newEvent = {
         ...commonProps,
         allDay: false,
-
         startTime,
         endTime,
-      };
+      }
     }
-    modalProps.onClose();
-    onSubmit(newEvent);
-  };
 
+    modalProps.onClose()
+    onSubmit(newEvent)
+  }
   return (
     <Modal {...modalProps}>
       <div className="modal-title">
