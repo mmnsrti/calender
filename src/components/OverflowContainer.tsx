@@ -1,13 +1,13 @@
-import { ReactNode, useLayoutEffect, useRef, useState } from "react";
+import { ReactNode, Key,useLayoutEffect, useRef, useState } from "react";
 
 type OverflowContainerProps<T> = {
   items: T[];
   renderItem: (item: T) => ReactNode;
   renderOverflow: (overflowAmount: number) => ReactNode;
-  getKey: (item: T) => ReactNode;
+  getKey: (item: T) => Key;
   className?: string;
 };
-const OverflowContainer = ({
+const OverflowContainer  = <T,>({
   items,
   getKey,
   renderItem,

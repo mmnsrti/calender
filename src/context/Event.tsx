@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { UnionOmit } from "../utils/types";
 import { EVENT_COLOR } from "./useEvent";
 
