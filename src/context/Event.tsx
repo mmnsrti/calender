@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { UnionOmit } from "../utils/types";
 import { EVENT_COLOR } from "./useEvent";
 
@@ -14,8 +14,8 @@ export type Event = {
 type EventsContext = {
   events: Event[];
   addEvent: (event: UnionOmit<Event, "id">) => void;
-  updateEvent : (id :string , event: UnionOmit<Event,'id'>) =>void
-  deleteEvent : (id :string) =>void
+  updateEvent: (id: string, event: UnionOmit<Event, "id">) => void;
+  deleteEvent: (id: string) => void;
 };
 
 export const Context = createContext<EventsContext | null>(null);
@@ -24,19 +24,19 @@ type EventProviderProps = {
   children: React.ReactNode;
 };
 export function EventProvider({ children }: EventProviderProps) {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useLocalStorage("events", []);
   function addEvent(event: UnionOmit<Event, "id">) {
     setEvents((e) => [...e, { ...event, id: crypto.randomUUID() }]);
   }
   function updateEvent(id: string, eventDetails: UnionOmit<Event, "id">) {
-    setEvents(e => {
-      return e.map(event => {
-        return event.id === id ? { id, ...eventDetails } : event
-      })
-    })
+    setEvents((e) => {
+      return e.map((event) => {
+        return event.id === id ? { id, ...eventDetails } : event;
+      });
+    });
   }
   function deleteEvent(id: string) {
-    setEvents(events.filter(event => event.id !== id));
+    setEvents(events.filter((event) => event.id !== id));
   }
 
   return (
@@ -46,5 +46,21 @@ export function EventProvider({ children }: EventProviderProps) {
   );
 }
 
+function useLocalStorage(key: string, initailValue: Event[]) {
+  const [value, setValue] = useState<Event[]>(() => {
+    const v = localStorage.getItem(key);
+    if (v == null) {
+      return initailValue;
+    }
+    return (JSON.parse(v) as Event[]).map((event) => {
+      if (event.date instanceof Date) return event;
+      return { ...event, date: new Date(event.date) };
+    });
+  });
+  useEffect(() => {
+  localStorage.setItem(key, JSON.stringify(value));
+}, [key, value])
 
-function
+  return [value, setValue] as const;
+
+}
