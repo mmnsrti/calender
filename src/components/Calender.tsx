@@ -117,14 +117,25 @@ function CalenderDay({
     return () => clearInterval(interval);
   }, []);
 
+  const currentHour = currentTime.getHours();
+  const currentMinute = currentTime.getMinutes();
+  const totalMinutesInDay = 25 * 60;
+  const currentMinutes = currentHour * 60 + currentMinute;
+  const heightPercentage = (currentMinutes / totalMinutesInDay) * 100;
+  useEffect(() => {
+    document.documentElement.style.setProperty('--current-time-height', `${heightPercentage}%`);
+  }, [heightPercentage]);
   
   return (
     <div
       className={cc(
         "day",
         !isSameMonth(day, selectedMonth) && "non-month-day",
-        isBefore(endOfDay(day), new Date()) && "old-month-day"
+        isBefore(endOfDay(day), new Date()) && "old-month-day",
+        isToday(day) && `current-time-indicator` 
+        
       )}
+
     >
       <div className="day-header">
         {showWeekName && (
@@ -134,13 +145,13 @@ function CalenderDay({
         )}
         <div className={cc("day-number", isToday(day) && " today")}>
           {formatDate(day, { day: "2-digit" })}
-
         </div>
-        <div className="current-time">
-        {isToday(day) && formatDate(currentTime, { timeStyle: "medium" })}
-      </div>
-      <DynamicWaveBackground currentTime={currentTime} />
-
+        <div className={cc( isToday(day) && '')} style={{ height: `${heightPercentage}%` }}>
+          
+          {isToday(day) && formatDate(currentTime, { timeStyle: "short" })}
+          
+        </div>
+        
         <button
           className="add-event-btn "
           onClick={() => setIsNewEventModalOpen(!isNewEventModalOpen)}
@@ -184,35 +195,6 @@ function CalenderDay({
     </div>
   );
 }
-const DynamicWaveBackground = ({ currentTime }) => {
-  const [waveHeight, setWaveHeight] = useState(100); // Initial wave height
-
-  useEffect(() => {
-    const updateWaveHeight = () => {
-      const now = new Date();
-      const totalSeconds = (now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds()) % 86400;
-      const percentOfDay = (totalSeconds / 86400) * 100; // Calculate percentage of the day passed
-      // Adjust wave height based on the percentage of the day passed
-      setWaveHeight(50 + Math.sin((percentOfDay * Math.PI) / 100) * 50); // Adjust multiplier and sine function as needed
-    };
-
-    const intervalId = setInterval(updateWaveHeight, 1000); // Update wave height every second
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  return (
-    <div className="waveWrapper">
-      <div className="waveWrapperInner">
-        <div className={cc("wave", "waveTop")} style={{ backgroundSize: `50% ${waveHeight}px` }}></div>
-        <div className={cc("wave", "waveMiddle")} style={{ backgroundSize: `50% ${waveHeight + 20}px` }}></div>
-        <div className={cc("wave", "waveBottom")} style={{ backgroundSize: `50% ${waveHeight}px` }}></div>
-        
-      </div>
-    </div>
-  );
-};
-
 type ViewMoreCalendarEventsModalProps = {
   events: Event[];
 } & Omit<ModalProps, "children">;
