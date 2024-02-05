@@ -1,0 +1,88 @@
+.checkbox-container{
+    margin-left: auto;
+}
+.darkmode-toggle-input {
+    width: 0;
+    position: relative;
+    left: 0;
+    height: 0;
+    visibility: hidden;
+  }
+  
+  .darkmode-toggle-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+  
+  .darkmode-toggle-label {
+    width: 250px; /* Adjust the width */
+    height: 100px; /* Adjust the height */
+    position: relative;
+    display: block;
+    background: #ebebeb;
+    border-radius: 100px; /* Adjust the border-radius */
+    box-shadow: inset 0px 3px 8px rgba(0, 0, 0, 0.3), inset 0px -3px 8px rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .darkmode-toggle-label:after {
+    content: "";
+    width: 90px; /* Adjust the width */
+    height: 90px; /* Adjust the height */
+    position: absolute;
+    top: 5px; /* Adjust the top position */
+    left: 5px; /* Adjust the left position */
+    background: linear-gradient(180deg, #ffcc89, #d8860b);
+    border-radius: 90px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15);
+    transition: 0.3s;
+  }
+  
+  .darkmode-toggle-label svg {
+    position: absolute;
+    width: 60px; /* Adjust the width */
+    top: 20px; /* Adjust the top position */
+    z-index: 100;
+  }
+  
+  .darkmode-toggle-sun {
+    left: 20px; /* Adjust the left position */
+    fill: #fff;
+    transition: 0.3s;
+  }
+  
+  .darkmode-toggle-moon {
+    left: 160px; /* Adjust the left position */
+    fill: #7e7e7e;
+    transition: 0.3s;
+  }
+  
+  .darkmode-toggle-input:checked + .darkmode-toggle-label {
+    background: #242424;
+  }
+  
+  .darkmode-toggle-input:checked + .darkmode-toggle-label:after {
+    left: 240px; /* Adjust the left position */
+    transform: translateX(-100%);
+    background: linear-gradient(180deg, #777, #3a3a3a);
+  }
+  
+  .darkmode-toggle-input:checked + .darkmode-toggle-label .darkmode-toggle-sun {
+    fill: #7e7e7e;
+  }
+  
+  .darkmode-toggle-input:checked + .darkmode-toggle-label .darkmode-toggle-moon {
+    fill: #fff;
+  }
+  
+  .darkmode-toggle-input:checked + .darkmode-toggle-label + .darkmode-toggle-background {
+    background: #242424;
+  }
+  
+  .darkmode-toggle-input:active:after {
+    width: 130px; /* Adjust the width */
+  }
+  

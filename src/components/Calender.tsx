@@ -1,4 +1,12 @@
-import { useState, useMemo, useRef, useId, Fragment, FormEvent, useEffect } from "react";
+import {
+  useState,
+  useMemo,
+  useRef,
+  useId,
+  Fragment,
+  FormEvent,
+  useEffect,
+} from "react";
 import {
   startOfWeek,
   startOfMonth,
@@ -20,6 +28,7 @@ import Modal, { ModalProps } from "./Modal";
 import { UnionOmit } from "../utils/types";
 import { Event } from "../context/Event";
 import OverflowContainer from "./OverflowContainer";
+import DarkMode from "./darkMode/darkMode";
 const Calender = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const calenderDays = useMemo(() => {
@@ -32,8 +41,7 @@ const Calender = () => {
     });
   }, [selectedMonth]);
   const { events } = useEvent();
-
-  console.log(selectedMonth);
+  
   return (
     <div>
       <div className="calendar">
@@ -58,6 +66,9 @@ const Calender = () => {
           <span className="month-title">
             {formatDate(selectedMonth, { month: "long", year: "numeric" })}
           </span>
+          <DarkMode 
+           
+          />
         </div>
         <div className="days">
           {calenderDays.map((day, index) => (
@@ -123,19 +134,20 @@ function CalenderDay({
   const currentMinutes = currentHour * 60 + currentMinute;
   const heightPercentage = (currentMinutes / totalMinutesInDay) * 100;
   useEffect(() => {
-    document.documentElement.style.setProperty('--current-time-height', `${heightPercentage}%`);
+    document.documentElement.style.setProperty(
+      "--current-time-height",
+      `${heightPercentage}%`
+    );
   }, [heightPercentage]);
-  
+
   return (
     <div
       className={cc(
         "day",
         !isSameMonth(day, selectedMonth) && "non-month-day",
         isBefore(endOfDay(day), new Date()) && "old-month-day",
-        isToday(day) && `current-time-indicator` 
-        
+        isToday(day) && `current-time-indicator`
       )}
-
     >
       <div className="day-header">
         {showWeekName && (
@@ -146,12 +158,13 @@ function CalenderDay({
         <div className={cc("day-number", isToday(day) && " today")}>
           {formatDate(day, { day: "2-digit" })}
         </div>
-        <div className={cc( isToday(day) && '')} style={{ height: `${heightPercentage}%` }}>
-          
+        <div
+          className={cc(isToday(day) && "")}
+          style={{ height: `${heightPercentage}%` }}
+        >
           {isToday(day) && formatDate(currentTime, { timeStyle: "short" })}
-          
         </div>
-        
+
         <button
           className="add-event-btn "
           onClick={() => setIsNewEventModalOpen(!isNewEventModalOpen)}
