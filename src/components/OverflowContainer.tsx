@@ -14,12 +14,12 @@ const OverflowContainer  = <T,>({
   renderOverflow,
   className,
 }: OverflowContainerProps<T>) => {
-  const [overflowAmount, setOverflowAmount] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  useLayoutEffect(() => {
-   if (containerRef.current == null ) return 
+    const [overflowAmount, setOverflowAmount] = useState(0);
+    const containerRef = useRef<HTMLDivElement>(null);
+    useLayoutEffect(() => {
+        if (containerRef.current == null ) return 
 
-    const observer = new ResizeObserver((entries) => {
+        const observer = new ResizeObserver((entries) => {
         const containerElement =entries[0]?.target
         if (containerElement == null) return
 

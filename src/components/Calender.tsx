@@ -1,11 +1,4 @@
-import  {
-  useState,
-  useMemo,
-  useRef,
-  useId,
-  Fragment,
-  FormEvent,
-} from "react";
+import { useState, useMemo, useRef, useId, Fragment, FormEvent, useEffect } from "react";
 import {
   startOfWeek,
   startOfMonth,
@@ -40,6 +33,7 @@ const Calender = () => {
   }, [selectedMonth]);
   const { events } = useEvent();
 
+  console.log(selectedMonth);
   return (
     <div>
       <div className="calendar">
@@ -62,7 +56,7 @@ const Calender = () => {
             </button>
           </div>
           <span className="month-title">
-            {formatDate(selectedMonth, { month: "long", year: "numeric" })}{" "}
+            {formatDate(selectedMonth, { month: "long", year: "numeric" })}
           </span>
         </div>
         <div className="days">
@@ -96,7 +90,8 @@ function CalenderDay({
 }: CalenderDayProps) {
   const { addEvent } = useEvent();
   const [isNewEventModalOpen, setIsNewEventModalOpen] = useState(false);
-  const [isViewMoreEventModalOpen, setIsViewMoreEventModalOpen] = useState(false);
+  const [isViewMoreEventModalOpen, setIsViewMoreEventModalOpen] =
+    useState(false);
   const sortedEvents = useMemo(() => {
     const timeToNumber = (time: string) => parseFloat(time.replace(":", "."));
 
@@ -112,6 +107,17 @@ function CalenderDay({
       }
     });
   }, [events]);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000); // Update every second
+
+    return () => clearInterval(interval);
+  }, []);
+
+  
   return (
     <div
       className={cc(
@@ -123,14 +129,20 @@ function CalenderDay({
       <div className="day-header">
         {showWeekName && (
           <div className="week-name">
-            {formatDate(day, { weekday: "short" })}
+            {formatDate(day, { weekday: "long" })}
           </div>
         )}
-        <div className={cc("day-number", isToday(day) && "today")}>
-          {formatDate(day, { day: "numeric" })}
+        <div className={cc("day-number", isToday(day) && " today")}>
+          {formatDate(day, { day: "2-digit" })}
+
         </div>
+        <div className="current-time">
+        {isToday(day) && formatDate(currentTime, { timeStyle: "medium" })}
+      </div>
+      <DynamicWaveBackground currentTime={currentTime} />
+
         <button
-          className="add-event-btn"
+          className="add-event-btn "
           onClick={() => setIsNewEventModalOpen(!isNewEventModalOpen)}
         >
           +
@@ -172,32 +184,59 @@ function CalenderDay({
     </div>
   );
 }
+const DynamicWaveBackground = ({ currentTime }) => {
+  const [waveHeight, setWaveHeight] = useState(100); // Initial wave height
+
+  useEffect(() => {
+    const updateWaveHeight = () => {
+      const now = new Date();
+      const totalSeconds = (now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds()) % 86400;
+      const percentOfDay = (totalSeconds / 86400) * 100; // Calculate percentage of the day passed
+      // Adjust wave height based on the percentage of the day passed
+      setWaveHeight(50 + Math.sin((percentOfDay * Math.PI) / 100) * 50); // Adjust multiplier and sine function as needed
+    };
+
+    const intervalId = setInterval(updateWaveHeight, 1000); // Update wave height every second
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  return (
+    <div className="waveWrapper">
+      <div className="waveWrapperInner">
+        <div className={cc("wave", "waveTop")} style={{ backgroundSize: `50% ${waveHeight}px` }}></div>
+        <div className={cc("wave", "waveMiddle")} style={{ backgroundSize: `50% ${waveHeight + 20}px` }}></div>
+        <div className={cc("wave", "waveBottom")} style={{ backgroundSize: `50% ${waveHeight}px` }}></div>
+        
+      </div>
+    </div>
+  );
+};
+
 type ViewMoreCalendarEventsModalProps = {
   events: Event[];
-}& Omit<ModalProps, "children">;
+} & Omit<ModalProps, "children">;
 
 function ViewMoreCalendarEventsModal({
   events,
   ...modalProps
 }: ViewMoreCalendarEventsModalProps) {
-  if(events.length===0 )return null
-  return (<Modal 
-    {...modalProps}
-  >
-     <div className="modal-title">
-        <small>{formatDate( events[0].date, { dateStyle: "long" })}</small>
+  if (events.length === 0) return null;
+  return (
+    <Modal {...modalProps}>
+      <div className="modal-title">
+        <small>{formatDate(events[0].date, { dateStyle: "long" })}</small>
         <button className="close-btn" onClick={modalProps.onClose}>
           &times;
         </button>
       </div>
-      <div className="events"> 
-      {
-        events.map(event => <CalenderEvent event={event} key={event.id}/>)
-      }
-
+      <div className="events">
+        {events.map((event) => (
+          <CalenderEvent event={event} key={event.id} />
+        ))}
       </div>
-
-  </Modal>)
+    </Modal>
+  );
 }
 
 function CalenderEvent({ event }: { event: Event }) {
@@ -236,8 +275,8 @@ function CalenderEvent({ event }: { event: Event }) {
 type EventFormModalProps = {
   onSubmit: (event: UnionOmit<Event, "id">) => void;
 } & (
-  | { onDelete: () => void; event: Event;date?: never}
-  | { onDelete?: never; event?: never;date: Date}
+  | { onDelete: () => void; event: Event; date?: never }
+  | { onDelete?: never; event?: never; date: Date }
 ) &
   Omit<ModalProps, "children">;
 
@@ -261,25 +300,25 @@ function EventFormModal({
   );
   const [startTime, setStartTime] = useState(event?.startTime || "");
   function handleSubmit(e: FormEvent) {
-    e.preventDefault()
+    e.preventDefault();
 
-    const name = nameRef.current?.value
-    const endTime = endTimeRef.current?.value
+    const name = nameRef.current?.value;
+    const endTime = endTimeRef.current?.value;
 
-    if (name == null || name === "") return
+    if (name == null || name === "") return;
 
     const commonProps = {
       name,
       date: date || event?.date,
       color: selectedColor,
-    }
-    let newEvent: UnionOmit<Event, "id">
+    };
+    let newEvent: UnionOmit<Event, "id">;
 
     if (isAllDayChecked) {
       newEvent = {
         ...commonProps,
         allDay: true,
-      }
+      };
     } else {
       if (
         startTime == null ||
@@ -287,18 +326,18 @@ function EventFormModal({
         endTime == null ||
         endTime === ""
       ) {
-        return
+        return;
       }
       newEvent = {
         ...commonProps,
         allDay: false,
         startTime,
         endTime,
-      }
+      };
     }
 
-    modalProps.onClose()
-    onSubmit(newEvent)
+    modalProps.onClose();
+    onSubmit(newEvent);
   }
   return (
     <Modal {...modalProps}>
