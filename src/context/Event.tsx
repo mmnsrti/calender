@@ -46,11 +46,11 @@ export function EventProvider({ children }: EventProviderProps) {
   );
 }
 
-function useLocalStorage(key: string, initailValue: Event[]) {
+function useLocalStorage(key: string, initialValue: Event[]) {
   const [value, setValue] = useState<Event[]>(() => {
     const v = localStorage.getItem(key);
     if (v == null) {
-      return initailValue;
+      return initialValue;
     }
     return (JSON.parse(v) as Event[]).map((event) => {
       if (event.date instanceof Date) return event;
