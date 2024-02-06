@@ -17,8 +17,8 @@
   }
   
   .darkmode-toggle-label {
-    width: 250px; /* Adjust the width */
-    height: 100px; /* Adjust the height */
+    width: 120px; /* Adjust the width */
+    height: 50px; /* Adjust the height */
     position: relative;
     display: block;
     background: #ebebeb;
@@ -30,11 +30,11 @@
   
   .darkmode-toggle-label:after {
     content: "";
-    width: 90px; /* Adjust the width */
-    height: 90px; /* Adjust the height */
+    width: 50px; /* Adjust the width */
+    height: 45px; /* Adjust the height */
     position: absolute;
-    top: 5px; /* Adjust the top position */
-    left: 5px; /* Adjust the left position */
+    top: 2px; /* Adjust the top position */
+    left: 2px; /* Adjust the left position */
     background: linear-gradient(180deg, #ffcc89, #d8860b);
     border-radius: 90px;
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15);
@@ -43,19 +43,19 @@
   
   .darkmode-toggle-label svg {
     position: absolute;
-    width: 60px; /* Adjust the width */
-    top: 20px; /* Adjust the top position */
+    width: 40px; /* Adjust the width */
+    top: 6px; /* Adjust the top position */
     z-index: 100;
   }
   
   .darkmode-toggle-sun {
-    left: 20px; /* Adjust the left position */
+    left: 5px; /* Adjust the left position */
     fill: #fff;
     transition: 0.3s;
   }
   
   .darkmode-toggle-moon {
-    left: 160px; /* Adjust the left position */
+    left:76px; /* Adjust the left position */
     fill: #7e7e7e;
     transition: 0.3s;
   }
@@ -65,7 +65,7 @@
   }
   
   .darkmode-toggle-input:checked + .darkmode-toggle-label:after {
-    left: 240px; /* Adjust the left position */
+    left: 120px; /* Adjust the left position */
     transform: translateX(-100%);
     background: linear-gradient(180deg, #777, #3a3a3a);
   }
