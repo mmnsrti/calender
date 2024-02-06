@@ -21,8 +21,7 @@ Check out the [demo](https://calendarcanvas.netlify.app/)!
 - **Responsive Design:** Ensure a consistent and optimal user experience across various devices.
 
 ## Demo
-
-![Calendar Demo](https://github.com/mmnsrti/calender/blob/main/demo.gif)
+![Animated Calendar](./public/ezgif-7-030bd49ca9.gif)
 
 Check out the [live demo](https://calendarcanvas.netlify.app/) hosted on Netlify.
 
