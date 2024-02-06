@@ -229,6 +229,7 @@ body {
   border-radius: 6px;
   /* Darker current time indicator */
   margin-inline: 6px;
+  max-height: 172px;
   margin-block: 2px;
 
 }
