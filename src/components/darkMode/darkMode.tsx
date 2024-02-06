@@ -1,10 +1,17 @@
+import { useEvent } from "../../context/useEvent";
 import "./style.css";
 const DarkMode = () => {
-
+  const { toggleDark,dark } = useEvent();
 
   return (
     <div className="checkbox-container">
-       <input type="checkbox" id="darkmode-toggle" className="darkmode-toggle-input" />
+      <input
+        type="checkbox"
+        checked={dark}
+        onChange={toggleDark}
+        id="darkmode-toggle"
+        className="darkmode-toggle-input"
+      />
       <label htmlFor="darkmode-toggle" className="darkmode-toggle-label">
         <svg
           version="1.1"
@@ -123,7 +130,6 @@ const DarkMode = () => {
           x="0px"
           y="0px"
           viewBox="0 0 49.739 49.739"
-
           xmlSpace="preserve"
         >
           <path
