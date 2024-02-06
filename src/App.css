@@ -71,12 +71,19 @@ body {
 }
 
 .dark-mode .close-btn:hover,
-.dark-mode .month-change-btn:hover,
+
 .dark-mode .add-event-btn:hover,
 .dark-mode .events-view-more-btn {
   color: var(--text-color);
   /* Lighter text color for better contrast */
   /* Darker background color on hover */
+}
+
+.dark-mode .month-change-btn:hover{
+  color: rgb(0, 0, 0) ;
+  background-color: #bdbdbd;
+
+
 }
 
 .dark-mode .current-time-indicator {
@@ -188,8 +195,9 @@ body {
 }
 
 .month-change-btn:hover {
-  background-color: #f1f3f4;
+  background-color: #949191a2;
 }
+
 
 .month-change-btn:first-child {
   margin-right: -0.5rem;
