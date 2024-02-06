@@ -49,7 +49,7 @@ export function EventProvider({ children }: EventProviderProps) {
     setEvents(events.filter((event) => event.id !== id));
   }
   function toggleDark() {
-    setDark((p)=>!p);
+    setDark((p:boolean)=>!p);
     
   }
 
