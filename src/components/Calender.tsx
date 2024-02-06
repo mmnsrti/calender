@@ -40,11 +40,10 @@ const Calender = () => {
       end: lastWeekEnd,
     });
   }, [selectedMonth]);
-  const { events } = useEvent();
-  
+  const { events,dark } = useEvent();
   return (
     <div>
-      <div className="calendar">
+      <div className={dark ? "calendar dark-mode" : "calendar"}>
         <div className="header">
           <button className="btn" onClick={() => setSelectedMonth(new Date())}>
             Today
