@@ -16,6 +16,9 @@ type EventsContext = {
   addEvent: (event: UnionOmit<Event, "id">) => void;
   updateEvent: (id: string, event: UnionOmit<Event, "id">) => void;
   deleteEvent: (id: string) => void;
+  dark: boolean;
+  toggleDark: () => void;
+
 };
 
 export const Context = createContext<EventsContext | null>(null);
@@ -25,6 +28,13 @@ type EventProviderProps = {
 };
 export function EventProvider({ children }: EventProviderProps) {
   const [events, setEvents] = useLocalStorage("events", []);
+  const [dark, setDark] = useState(() => {
+    const darkValue = localStorage.getItem('dark');
+    return darkValue ? JSON.parse(darkValue) : false;
+  });
+    useEffect(() => {
+    localStorage.setItem('dark', JSON.stringify(dark));
+  }, [dark])
   function addEvent(event: UnionOmit<Event, "id">) {
     setEvents((e) => [...e, { ...event, id: crypto.randomUUID() }]);
   }
@@ -38,9 +48,13 @@ export function EventProvider({ children }: EventProviderProps) {
   function deleteEvent(id: string) {
     setEvents(events.filter((event) => event.id !== id));
   }
+  function toggleDark() {
+    setDark((p)=>!p);
+    
+  }
 
   return (
-    <Context.Provider value={{ events, addEvent, updateEvent, deleteEvent }}>
+    <Context.Provider value={{ events,dark,toggleDark, addEvent, updateEvent, deleteEvent }}>
       {children}
     </Context.Provider>
   );
