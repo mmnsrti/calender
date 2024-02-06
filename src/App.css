@@ -3,7 +3,7 @@
 *::after {
   box-sizing: border-box;
   font-family: sans-serif;
-  
+
 }
 
 :root {
@@ -24,29 +24,40 @@ body {
   margin: 0 auto;
   display: grid;
 }
+
 /* Define dark mode styles */
 .dark-mode {
-  --blue-background: hsl(200, 20%, 20%);
-  --red-background: hsl(0, 20%, 30%);
-  --green-background: hsl(150, 20%, 10%);
+  --blue-background: hsl(200, 80%, 50%);
+  --red-background: hsl(0, 75%, 60%);
+  --green-background: hsl(150, 80%, 30%);
   --border-color: #555;
   --day-padding: 0.25rem;
-  --text-color: #ffffff; /* Adjust text color for better readability */
+  --text-color: #fff7f7;
+  /* Adjust text color for better readability */
 }
 
 
 /* Apply dark mode styles */
 .dark-mode .header,
 .dark-mode .days,
-.dark-mode .event,
-.dark-mode .event-time
-.dark-mode .events-view-more-btn {
-  background-color: #242424; /* Dark background color */
+.dark-mode .event-time .dark-mode .events-view-more-btn {
+  background-color: #242424;
+  /* Dark background color */
   color: var(--text-color);
-   /* Lighter text color for better contrast */
+  /* Lighter text color for better contrast */
 }
-.dark-mode .day{
-  background-color: #494848; /* Dark background color */
+
+.dark-mode .event{
+  color: var(--text-color);
+
+}
+.dark-mode .event-time {
+  color: #e0e0e0dc;
+}
+
+.dark-mode .day {
+  background-color: #494848;
+  /* Dark background color */
 
 }
 
@@ -55,24 +66,28 @@ body {
 .dark-mode .month-title,
 .dark-mode .week-name,
 .dark-mode .color-dot {
-  color: var(--text-color); /* Lighter text color for better contrast */
+  color: var(--text-color);
+  /* Lighter text color for better contrast */
 }
 
 .dark-mode .close-btn:hover,
 .dark-mode .month-change-btn:hover,
 .dark-mode .add-event-btn:hover,
 .dark-mode .events-view-more-btn {
-  color: var(--text-color); /* Lighter text color for better contrast */
+  color: var(--text-color);
+  /* Lighter text color for better contrast */
   /* Darker background color on hover */
 }
 
 .dark-mode .current-time-indicator {
   background-color: rgba(122, 121, 121, 0.842);
-  border-radius: 10px; /* Darker current time indicator */
+  border-radius: 10px;
+  /* Darker current time indicator */
 }
 
 .dark-mode .color-radio+label::before {
-  opacity: 0.5; /* Adjust opacity for better visibility in dark mode */
+  opacity: 0.5;
+  /* Adjust opacity for better visibility in dark mode */
 }
 
 
@@ -166,6 +181,7 @@ body {
   transition: background-color 250ms;
   color: #333;
 }
+
 .dark-mode .month-change-btn {
   color: #fcfcfc;
 
@@ -202,7 +218,8 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 150px;
-  border-radius: 6px; /* Darker current time indicator */   
+  border-radius: 6px;
+  /* Darker current time indicator */
   margin-inline: 6px;
   margin-block: 2px;
 
@@ -243,7 +260,8 @@ body {
 }
 
 :root {
-  --current-time-height: 0; /* Default height */
+  --current-time-height: 0;
+  /* Default height */
 }
 
 .current-time-indicator {
@@ -253,7 +271,7 @@ body {
   right: 0;
   background-color: rgba(131, 148, 150, 0.3);
   z-index: 1;
-  
+
 }
 
 
@@ -292,8 +310,8 @@ body {
   background-color: #f1f3f4;
 }
 
-.dark-mode .add-event-btn{
-    color: #fcfcfc;
+.dark-mode .add-event-btn {
+  color: #fcfcfc;
 
 }
 
@@ -309,6 +327,7 @@ body {
   border: none;
   font-size: 1rem;
   padding: 0;
+  background-color: transparent;
 }
 
 .all-day-event {
@@ -404,7 +423,7 @@ body {
   }
 }
 
- .modal .modal-body {
+.modal .modal-body {
   background-color: white;
   border-radius: 0.5rem;
   padding: 1rem;
@@ -413,7 +432,8 @@ body {
   animation: pop-in 250ms forwards;
   scale: 0;
 }
-.dark-mode   .modal-body {
+
+.dark-mode .modal-body {
   background-color: rgb(0, 0, 0);
 
 }
